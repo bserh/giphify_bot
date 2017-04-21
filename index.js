@@ -44,12 +44,13 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
 
     var searchString = message.text.trim().replace(/\s+/g, '+');
     var url = GIPHY_BASE_URL + GIPHY_SEARCH_ENDPOINT + '?q=' + searchString + '&' + GIPHY_API_KEY_SUFIX;
-
     AXIOS.get(url).then(response => {
-        var gifs = response.data;
+        var gifs = response.data.data;
 
+        // Defaults
         var photoUrl = DEFAULT_PHOTO_URL;
         var caption = 'Sorry, we didn\'t find funny gif for you :(';
+
         if(gifs.length > 0) {
             var gifToShow = gifs[getRandomIntFromRange(0, gifs.length - 1)];
             photoUrl = gifToShow.images.downsized_medium.url.toString();
