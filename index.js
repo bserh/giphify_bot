@@ -41,23 +41,23 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
     var searchString = message.text.replace(/\s+/g, '+');
     var url = GIPHY_BASE_URL + GIPHY_SEARCH_ENDPOINT + '?q=' + searchString + '&' + GIPHY_API_KEY_SUFIX;
 
-    AXIOS.get(url).then(response = > {
+    AXIOS.get(url).then(response => {
         console.log(response);
 
         // Remember to use your own API toked instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
         AXIOS.post(TELEGRAM_BASE_URL + '/bot' +  + '/sendMessage', {
             chat_id: message.chat.id,
             text: 'Got it'
-        }).then(response = > {
+        }).then(response => {
             // We get here if the message was successfully posted
             console.log('Message posted');
             res.end('ok');
-        }).catch(err = > {
+        }).catch(err => {
             // ...and here if it was not
             console.log('Error :', err);
             res.end('Error :' + err);
         });
-    }).catch(error = > {
+    }).catch(error => {
         // Log the error
         console.log(error);
         res.end('Error :' + err);
