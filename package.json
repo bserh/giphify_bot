@@ -1,0 +1,30 @@
+{
+  "name": "giphify_bot",
+  "version": "0.0.1",
+  "description": "Pretty simple giphy telegram bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bserh/giphify_bot.git"
+  },
+  "keywords": [
+    "giphy",
+    "telegram",
+    "bot"
+  ],
+  "author": "Serhii Bavykin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bserh/giphify_bot/issues"
+  },
+  "homepage": "https://github.com/bserh/giphify_bot",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2"
+  }
+}
+
