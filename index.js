@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 
 var bodyParser = require('body-parser');
+var {getRandomIntFromRange} = require('./utils');
 
 // Define rest client
 const AXIOS = require('axios');
@@ -11,10 +12,13 @@ const SERVER_PORT = 3000;
 
 // API keys
 const GIPHY_PUBLIC_API_KEY = 'dc6zaTOxFJmzC';
-const {GIPHYFY_TELEGRAM_BOT_API_KEY} = require('constants');
+const GIPHYFY_TELEGRAM_BOT_API_KEY = '325544497:AAHsO21Qx2mBWq6INJ85OszFY_amDp9Lh2w';
 
 // URL Endpoints
 const TELEGRAM_BASE_URL = 'https://api.telegram.org';
+const TELEGRAM_MESSAGE_PHOTO_ENDPOINT = '/sendPhoto';
+const DEFAULT_PHOTO_URL = 'http://media.salemwebnetwork.com/cms/CROSSCARDS/17343-im-sorry-pug.jpg';
+
 const GIPHY_BASE_URL = 'http://api.giphy.com';
 const GIPHY_API_KEY_SUFIX = 'api_key=' + GIPHY_PUBLIC_API_KEY;
 const GIPHY_SEARCH_ENDPOINT = '/v1/gifs/search';
@@ -38,29 +42,35 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
         return res.end();
     }
 
-    var searchString = message.text.replace(/\s+/g, '+');
+    var searchString = message.text.trim().replace(/\s+/g, '+');
     var url = GIPHY_BASE_URL + GIPHY_SEARCH_ENDPOINT + '?q=' + searchString + '&' + GIPHY_API_KEY_SUFIX;
 
     AXIOS.get(url).then(response => {
-        console.log(response);
+        var gifs = response.data;
 
+        var photoUrl = DEFAULT_PHOTO_URL;
+        var caption = 'Sorry, we didn\'t find funny gif for you :(';
+        if(gifs.length > 0) {
+            var gifToShow = gifs[getRandomIntFromRange(0, gifs.length - 1)];
+            photoUrl = gifToShow.images.downsized_medium.url.toString();
+            caption = gifToShow.images.downsized_medium.url.toString();
+        }
         // Remember to use your own API toked instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
-        AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + '/sendMessage', {
+        AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + TELEGRAM_MESSAGE_PHOTO_ENDPOINT, {
             chat_id: message.chat.id,
-            text: 'Got it'
+            photo: photoUrl,
+            caption: caption
         }).then(response => {
             // We get here if the message was successfully posted
             console.log('Message posted');
             res.end('ok');
         }).catch(err => {
             // ...and here if it was not
-            console.log('Error :', err);
-            res.end('Error :' + err);
+            res.end('Error: ' + err);
         });
     }).catch(error => {
         // Log the error
-        console.log(error);
-        res.end('Error :' + err);
+        res.end('From Giphy :' + error);
     });
 });
 
