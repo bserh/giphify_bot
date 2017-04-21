@@ -38,3 +38,6 @@ jspm_packages
 
 # Intelijj IDEA
 .idea
+
+# Hidden information should be contained there
+constants.js
