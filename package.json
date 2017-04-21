@@ -16,7 +16,7 @@
     "telegram",
     "bot"
   ],
-  "author": "Serhii Bavykin",
+  "author": "Serhii Bavykin <codedealerb@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/bserh/giphify_bot/issues"

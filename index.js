@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 
 //This is the route the API will call
 app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
-    const {message} = req.body;
+    const message = req.body;
 
     //Each message contains "text" and a "chat" object, which has an "id" which is the chat id
     if (!message) {
