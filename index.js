@@ -45,7 +45,7 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
         console.log(response);
 
         // Remember to use your own API toked instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
-        AXIOS.post(TELEGRAM_BASE_URL + '/bot' +  + '/sendMessage', {
+        AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + '/sendMessage', {
             chat_id: message.chat.id,
             text: 'Got it'
         }).then(response => {
