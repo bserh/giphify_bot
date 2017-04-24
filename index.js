@@ -62,6 +62,13 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
     });
 });
 
+/**
+ * Send a gif to specified chat and complete the response
+ * @param chatId - telegram chat id
+ * @param gifUrl - url with gif file
+ * @param gifCaption - the label for the gif
+ * @param res - response to end the request lifecycle
+ */
 function sendGifToTelegram(chatId, gifUrl, gifCaption, res) {
     // Remember to use your own API token instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
     AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + TELEGRAM_MESSAGE_GIF_ENDPOINT, {
