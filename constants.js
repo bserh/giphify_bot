@@ -1,7 +1,7 @@
 // URLs grom telegram
 const TELEGRAM_BASE_URL = 'https://api.telegram.org';
-const TELEGRAM_MESSAGE_PHOTO_ENDPOINT = '/sendPhoto';
-const DEFAULT_PHOTO_URL = 'http://media.salemwebnetwork.com/cms/CROSSCARDS/17343-im-sorry-pug.jpg';
+const TELEGRAM_MESSAGE_GIF_ENDPOINT = '/sendVideo';
+const DEFAULT_GIF_URL = 'http://gph.is/1KuNTVa';
 
 // URLs from giphy
 const {GIPHY_PUBLIC_API_KEY} = require('./variables');
@@ -15,5 +15,5 @@ module.exports = {
     GIPHY_BASE_URL, GIPHY_API_KEY_SUFIX, GIPHY_SEARCH_ENDPOINT,
 
     // Telegram
-    TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_PHOTO_ENDPOINT, DEFAULT_PHOTO_URL
+    TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_GIF_ENDPOINT, DEFAULT_GIF_URL
 }
