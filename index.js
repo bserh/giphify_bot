@@ -13,7 +13,7 @@ const SERVER_PORT = 3000;
 const AXIOS = require('axios');
 
 // Telegram imports
-const {TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_GIF_ENDPOINT, DEFAULT_GIF_URL} = require('./constants');
+const {TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_GIF_ENDPOINT, DEFAULT_GIF_URL, RANDOM_KEYWORD_COMMAND} = require('./constants');
 const {GIPHYFY_TELEGRAM_BOT_API_KEY} = require('./variables');
 
 // Rest enpoints
@@ -44,14 +44,19 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
         caption = 'Sorry, I didn\'t find funny gif for you :(';
 
     AXIOS.get(giphySearchURL).then(response => {
-        var gifs = response.data.data;
+        var giphyResponse = response.data.data;
 
-        if(gifs.length > 0) {
-            var gifToShow = gifs[getRandomIntFromRange(0, gifs.length - 1)];
+        // Override data depends on current mode
+        if(searchString === RANDOM_KEYWORD_COMMAND) {
+            gifURL = giphyResponse.image_url;
+            caption = giphyResponse.caption;
+        } else {
+            if(giphyResponse.length > 0) {
+                var gifToShow = giphyResponse[getRandomIntFromRange(0, giphyResponse.length - 1)];
 
-            // Override data
-            gifURL = gifToShow.images.downsized_medium.url.toString();
-            caption = gifToShow.images.downsized_medium.url.toString();
+                gifURL = gifToShow.images.downsized_medium.url.toString();
+                caption = gifToShow.images.downsized_medium.url.toString();
+            }
         }
 
         // Send random gif from the first page(from 25 gifs retrieved) of response data
