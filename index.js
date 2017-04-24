@@ -13,7 +13,7 @@ const SERVER_PORT = 3000;
 const AXIOS = require('axios');
 
 // Telegram imports
-const {TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_PHOTO_ENDPOINT, DEFAULT_PHOTO_URL} = require('./constants');
+const {TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_GIF_ENDPOINT, DEFAULT_GIF_URL} = require('./constants');
 const {GIPHYFY_TELEGRAM_BOT_API_KEY} = require('./variables');
 
 // Rest enpoints
@@ -38,38 +38,45 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
     }
 
     var searchString = message.text.trim().replace(/\s+/g, '+'),
-        giphySearchURL = buildGiphySearchURL(searchString);
+        giphySearchURL = buildGiphySearchURL(searchString),
+        // Defaults
+        gifURL = DEFAULT_GIF_URL,
+        caption = 'Sorry, I didn\'t find funny gif for you :(';
 
     AXIOS.get(giphySearchURL).then(response => {
-        var gifs = response.data.data,
-            // Defaults
-            photoUrl = DEFAULT_PHOTO_URL,
-            caption = 'Sorry, we didn\'t find funny gif for you :(';
+        var gifs = response.data.data;
 
         if(gifs.length > 0) {
             var gifToShow = gifs[getRandomIntFromRange(0, gifs.length - 1)];
-            
-            photoUrl = gifToShow.images.downsized_medium.url.toString();
+
+            // Override data
+            gifURL = gifToShow.images.downsized_medium.url.toString();
             caption = gifToShow.images.downsized_medium.url.toString();
         }
-        // Remember to use your own API toked instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
-        AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + TELEGRAM_MESSAGE_PHOTO_ENDPOINT, {
-            chat_id: message.chat.id,
-            photo: photoUrl,
-            caption: caption
-        }).then(response => {
-            // We get here if the message was successfully posted
-            console.log('Message posted');
-            res.end('ok');
-        }).catch(err => {
-            // ...and here if it was not
-            res.end('Error: ' + err);
-        });
+
+        // Send random gif from the first page(from 25 gifs retrieved) of response data
+        sendGifToTelegram(message.chat.id, gifURL, caption, res);
     }).catch(error => {
-        // Log the error
-        res.end('From Giphy :' + error);
+        // Send defaults
+        sendGifToTelegram(message.chat.id, gifURL, caption, res);
     });
 });
+
+function sendGifToTelegram(chatId, gifUrl, gifCaption, res) {
+    // Remember to use your own API token instead of the one below  "https://api.telegram.org/bot<your_api_token>/sendMessage"
+    AXIOS.post(TELEGRAM_BASE_URL + '/bot' + GIPHYFY_TELEGRAM_BOT_API_KEY + TELEGRAM_MESSAGE_GIF_ENDPOINT, {
+        chat_id: chatId,
+        video: gifUrl,
+        caption: gifCaption
+    }).then(response => {
+        // We get here if the message was successfully posted
+        console.log('Message posted');
+        res.end('ok');
+    }).catch(err => {
+        // ...and here if it was not
+        res.end('Error: ' + err);
+    });
+}
 
 // Finally, start our server
 app.listen(SERVER_PORT, function() {
