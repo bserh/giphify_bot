@@ -1,30 +1,23 @@
 // Define server
-var express = require('express');
-var app = express();
+var express = require('express'),
+    app = express(),
+    bodyParser = require('body-parser'),
+    {getRandomIntFromRange, buildGiphySearchURL} = require('./utils');
 
-var bodyParser = require('body-parser');
-var {getRandomIntFromRange} = require('./utils');
-
-// Define rest client
-const AXIOS = require('axios');
 // The port is being used by server
 const SERVER_PORT = 3000;
 
-// API keys
-const GIPHY_PUBLIC_API_KEY = 'dc6zaTOxFJmzC';
-const GIPHYFY_TELEGRAM_BOT_API_KEY = '325544497:AAHsO21Qx2mBWq6INJ85OszFY_amDp9Lh2w';
+// Define rest client
+const AXIOS = require('axios');
 
-// URL Endpoints
-const TELEGRAM_BASE_URL = 'https://api.telegram.org';
-const TELEGRAM_MESSAGE_PHOTO_ENDPOINT = '/sendPhoto';
-const DEFAULT_PHOTO_URL = 'http://media.salemwebnetwork.com/cms/CROSSCARDS/17343-im-sorry-pug.jpg';
+// Telegram imports
+const {TELEGRAM_BASE_URL, TELEGRAM_MESSAGE_PHOTO_ENDPOINT, DEFAULT_PHOTO_URL} = require('./constants');
+const {GIPHYFY_TELEGRAM_BOT_API_KEY} = require('./variables');
 
-const GIPHY_BASE_URL = 'http://api.giphy.com';
-const GIPHY_API_KEY_SUFIX = 'api_key=' + GIPHY_PUBLIC_API_KEY;
-const GIPHY_SEARCH_ENDPOINT = '/v1/gifs/search';
-
+// Rest enpoints
 const BOT_INCOMING_MESSAGE_ENDPOINT = '/new-message';
 
+// Prepare body parsers
 // For parsing application/json
 app.use(bodyParser.json());
 // For parsing application/x-www-form-urlencoded
@@ -42,17 +35,18 @@ app.post(BOT_INCOMING_MESSAGE_ENDPOINT, function (req, res) {
         return res.end();
     }
 
-    var searchString = message.text.trim().replace(/\s+/g, '+');
-    var url = GIPHY_BASE_URL + GIPHY_SEARCH_ENDPOINT + '?q=' + searchString + '&' + GIPHY_API_KEY_SUFIX;
-    AXIOS.get(url).then(response => {
-        var gifs = response.data.data;
+    var searchString = message.text.trim().replace(/\s+/g, '+'),
+        giphySearchURL = buildGiphySearchURL(searchString);
 
-        // Defaults
-        var photoUrl = DEFAULT_PHOTO_URL;
-        var caption = 'Sorry, we didn\'t find funny gif for you :(';
+    AXIOS.get(giphySearchURL).then(response => {
+        var gifs = response.data.data,
+            // Defaults
+            photoUrl = DEFAULT_PHOTO_URL,
+            caption = 'Sorry, we didn\'t find funny gif for you :(';
 
         if(gifs.length > 0) {
             var gifToShow = gifs[getRandomIntFromRange(0, gifs.length - 1)];
+            
             photoUrl = gifToShow.images.downsized_medium.url.toString();
             caption = gifToShow.images.downsized_medium.url.toString();
         }
