@@ -40,4 +40,4 @@ jspm_packages
 .idea
 
 # Hidden information should be contained there
-constants.js
+variables.js
