@@ -1,8 +1,10 @@
-// Define server
+// Define server and its requisites
 var express = require('express'),
     app = express(),
-    bodyParser = require('body-parser'),
-    {getRandomIntFromRange, buildGiphySearchURL} = require('./utils');
+    bodyParser = require('body-parser');
+
+// Import useful functions from utils module
+var {getRandomIntFromRange, buildGiphySearchURL} = require('./utils');
 
 // The port is being used by server
 const SERVER_PORT = 3000;
