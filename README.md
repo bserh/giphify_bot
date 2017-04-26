@@ -48,3 +48,34 @@ $curl -F "url=https://example.url.io/new-message" https://api.telegram.org/bot<Y
 ### Usage
 
 To start using the bot write a search keyword directly to its private chat or use command ```/random``` to get randomly found gif
+
+or
+
+Run the application in docker:
+
+```
+# Build the docker image
+$docker build -t giphify-bot-app .
+
+# Run docker container
+$docker run -p 3000:3000 -d node-web-app
+
+# To see the logs from container
+$docker ps
+
+# Find your container id then
+$docker logs <container id>
+
+# Logs:
+npm info it worked if it ends with ok
+npm info using npm@3.10.10
+npm info using node@v6.10.2
+npm info lifecycle giphify_bot@0.0.1~prestart: giphify_bot@0.0.1
+npm info lifecycle giphify_bot@0.0.1~start: giphify_bot@0.0.1
+
+> giphify_bot@0.0.1 start /usr/src/app
+> node index.js
+
+Telegram giphyfy bot listening on port 3000!
+
+```
