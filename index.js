@@ -1,3 +1,4 @@
+'use strict';
 // Define server and its requisites
 var express = require('express'),
     app = express(),
