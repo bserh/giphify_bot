@@ -58,7 +58,7 @@ Run the application in docker:
 $docker build -t giphify-bot-app .
 
 # Run docker container
-$docker run -p 3000:3000 -d node-web-app
+$docker run -p 3000:3000 -d giphify-bot-app
 
 # To see the logs from container
 $docker ps
